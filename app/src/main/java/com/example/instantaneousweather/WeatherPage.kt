@@ -22,8 +22,15 @@ import com.example.instantaneousweather.ui.theme.InstantaneousWeatherTheme
 @Composable
 fun WeatherPage(viewModel: WeatherViewModel) {
     val state = viewModel.uiState.value
+    val isSafe = state.weatherData?.let { it.wind_spd * 3.6 < 20 } ?: true
 
-    Scaffold(containerColor = Color(0xFFE0E0E0)) { padding ->
+    val backgroundColor = if (state.weatherData == null) {
+        Color(0xFFB7D3C7)
+    } else {
+        if (isSafe) Color(0xFFB7D3C7) else Color(0xFFD3B7B7)
+    }
+
+    Scaffold(containerColor = backgroundColor) { padding ->
         when {
             state.isLoading -> {
                 // Yükleniyor ekranı
@@ -49,10 +56,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     // UÇUŞ GÜVENLİĞİ (Rüzgar 20 km/h üstündeyse riskli diyelim)
-                    val isSafe = data.wind_spd * 3.6 < 20 // m/s'yi km/h'ye çevirdik
-
-                    val topCardColor1 = if (isSafe) Color(0xFFA2EEA7) else Color(0xFFEEA2A2)
-
+                    val topCardColor1 = if (isSafe) Color(0xFFA1F193) else Color(0xFFF19393)
 
                     Card(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp).border(3.dp, Color.Black), colors = CardDefaults.cardColors(containerColor = topCardColor1) ) {
                         Column(modifier = Modifier.padding(24.dp).align(Alignment.CenterHorizontally)) {
@@ -137,7 +141,7 @@ fun WeatherPagePreview() {
         weatherData = WeatherData(
             temp = 22.4,
             app_temp = 21.0,
-            wind_spd = 14.5,        // ~16.2 km/h
+            wind_spd = 4.5,        // ~16.2 km/h
             wind_gust_spd = 8.2,   // ~29.5 km/h (Kritik veri!)
             wind_cdir_full = "Kuzey Batı",
             wind_dir = 315,
