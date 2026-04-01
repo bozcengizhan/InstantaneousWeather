@@ -21,7 +21,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             InstantaneousWeatherTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-
                 }
             }
         }
