@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -87,13 +88,15 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                         DroneDataCard("UV INDEX", "${data.uv.toInt()}", Modifier.weight(1f))
                     }
 
-
+                    Spacer(Modifier.weight(0.5f))
 
                     Text(
-                        text = "Konum: ${data.city_name}",
-                        modifier = Modifier.padding(top = 20.dp),
-                        color = Color.DarkGray
+                        text = "${data.city_name}",
+                        color = Color.Gray,
+                        style = MaterialTheme.typography.headlineSmall,
                     )
+
+                    Spacer(Modifier.weight(0.1f))
                 }
             }
         }
@@ -109,7 +112,7 @@ fun DroneDataCard(label: String, value: String, modifier: Modifier = Modifier) {
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(12.dp).fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = label, fontSize = 12.sp, color = Color.Gray, fontWeight = FontWeight.Bold, modifier = Modifier.align(Alignment.CenterHorizontally))
