@@ -68,13 +68,13 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                     }
 
                     Row(modifier = Modifier.fillMaxWidth()) {
-                        DroneDataCard("SICAKLIK", "${data.temp}°C", Modifier.weight(1f))
-                        DroneDataCard("NEM", "%${data.rh.toInt()}", Modifier.weight(1f))
+                        DroneDataCard("RÜZGAR HAMLESİ", "${String.format("%.1f", data.wind_gust_spd * 3.6)} km/h", Modifier.weight(1f))
+                        DroneDataCard("BASINÇ", "${data.pres.toInt()} hPa", Modifier.weight(1f))
                     }
 
                     Row(modifier = Modifier.fillMaxWidth()) {
-                        DroneDataCard("RÜZGAR HAMLESİ", "${String.format("%.1f", data.wind_gust_spd * 3.6)} km/h", Modifier.weight(1f))
-                        DroneDataCard("BASINÇ", "${data.pres.toInt()} hPa", Modifier.weight(1f))
+                        DroneDataCard("SICAKLIK", "${data.temp}°C", Modifier.weight(1f))
+                        DroneDataCard("NEM", "%${data.rh.toInt()}", Modifier.weight(1f))
                     }
 
                     Row(modifier = Modifier.fillMaxWidth()) {
@@ -112,10 +112,45 @@ fun DroneDataCard(label: String, value: String, modifier: Modifier = Modifier) {
             modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = label, fontSize = 12.sp, color = Color.Gray, fontWeight = FontWeight.Bold)
+            Text(text = label, fontSize = 12.sp, color = Color.Gray, fontWeight = FontWeight.Bold, modifier = Modifier.align(Alignment.CenterHorizontally))
             Spacer(modifier = Modifier.height(4.dp))
             Text(text = value, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
         }
     }
 }
 
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun WeatherPagePreview() {
+    // 1. Sahte bir ViewModel oluşturuyoruz
+    val mockViewModel = WeatherViewModel()
+
+    // 2. ViewModel'in içindeki state'i manuel olarak zengin verilerle dolduruyoruz
+    mockViewModel.uiState.value = WeatherUiState(
+        isLoading = false,
+        weatherData = WeatherData(
+            temp = 22.4,
+            app_temp = 21.0,
+            wind_spd = 4.5,        // ~16.2 km/h
+            wind_gust_spd = 8.2,   // ~29.5 km/h (Kritik veri!)
+            wind_cdir_full = "Kuzey Batı",
+            wind_dir = 315,
+            vis = 12.0,
+            rh = 55.0,
+            clouds = 15,
+            pres = 1013.2,
+            uv = 4.0,
+            city_name = "Üsküdar / İstanbul",
+            sunrise = "06:45",
+            sunset = "19:32",
+            timezone = "Europe/Istanbul",
+            aqs = 42
+        ),
+        errorMessage = null
+    )
+
+    // 3. Kendi temanla sarmalayarak gösteriyoruz
+    InstantaneousWeatherTheme {
+        WeatherPage(viewModel = mockViewModel)
+    }
+}
