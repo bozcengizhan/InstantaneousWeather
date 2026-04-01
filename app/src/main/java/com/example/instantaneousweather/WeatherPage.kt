@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.sp
 import com.example.instantaneousweather.viewmodels.WeatherViewModel
 import com.example.instantaneousweather.model.WeatherData
 import com.example.instantaneousweather.WeatherUiState
+import com.example.instantaneousweather.ui.theme.InstantaneousWeatherTheme
 
 
 @Composable
@@ -71,7 +72,22 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                         DroneDataCard("NEM", "%${data.rh.toInt()}", Modifier.weight(1f))
                     }
 
-                    DroneDataCard("BULUT ORANI", "%${data.clouds}", Modifier.fillMaxWidth())
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        DroneDataCard("RÜZGAR HAMLESİ", "${String.format("%.1f", data.wind_gust_spd * 3.6)} km/h", Modifier.weight(1f))
+                        DroneDataCard("BASINÇ", "${data.pres.toInt()} hPa", Modifier.weight(1f))
+                    }
+
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        DroneDataCard("GÜN DOĞUMU", data.sunrise, Modifier.weight(1f))
+                        DroneDataCard("GÜN BATIMI", data.sunset, Modifier.weight(1f))
+                    }
+
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        DroneDataCard("BULUT ORANI", "%${data.clouds}", Modifier.weight(1f))
+                        DroneDataCard("UV INDEX", "${data.uv.toInt()}", Modifier.weight(1f))
+                    }
+
+
 
                     Text(
                         text = "Konum: ${data.city_name}",
@@ -103,10 +119,3 @@ fun DroneDataCard(label: String, value: String, modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun WeatherPagePreview() {
-    // Önizleme için sahte bir viewModel
-    val mockViewModel = WeatherViewModel()
-    WeatherPage(viewModel = mockViewModel)
-}
