@@ -2,6 +2,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -115,8 +116,10 @@ fun DroneDataCard(label: String, value: String, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .padding(8.dp)
-            .border(3.dp, Color.Black),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+            .border(3.dp, Color.Black, RoundedCornerShape(16.dp)),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 12.dp)
     ) {
         Column(
             modifier = Modifier.padding(12.dp).fillMaxWidth(),
