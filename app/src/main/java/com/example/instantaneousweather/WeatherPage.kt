@@ -51,7 +51,10 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                     // UÇUŞ GÜVENLİĞİ (Rüzgar 20 km/h üstündeyse riskli diyelim)
                     val isSafe = data.wind_spd * 3.6 < 20 // m/s'yi km/h'ye çevirdik
 
-                    Card(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp).border(3.dp, Color.Black)) {
+                    val topCardColor1 = if (isSafe) Color(0xFFA2EEA7) else Color(0xFFEEA2A2)
+
+
+                    Card(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp).border(3.dp, Color.Black), colors = CardDefaults.cardColors(containerColor = topCardColor1) ) {
                         Column(modifier = Modifier.padding(24.dp).align(Alignment.CenterHorizontally)) {
                             Text(text = "UÇUŞ GÜVENLİĞİ", fontSize = 14.sp)
                             Text(
@@ -134,7 +137,7 @@ fun WeatherPagePreview() {
         weatherData = WeatherData(
             temp = 22.4,
             app_temp = 21.0,
-            wind_spd = 4.5,        // ~16.2 km/h
+            wind_spd = 14.5,        // ~16.2 km/h
             wind_gust_spd = 8.2,   // ~29.5 km/h (Kritik veri!)
             wind_cdir_full = "Kuzey Batı",
             wind_dir = 315,
