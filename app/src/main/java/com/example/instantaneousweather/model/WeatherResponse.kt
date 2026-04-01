@@ -1,5 +1,7 @@
 package com.example.instantaneousweather.model
 
+import com.example.instantaneousweather.FlightSafety
+
 data class WeatherResponse(
     val data: List<WeatherData>
 )
@@ -28,3 +30,19 @@ data class WeatherData(
     val sunset: String,         // Gün batımı (HH:mm formatında)
     val timezone: String        // Bölge zaman dilimi
 )
+
+fun getFlightSafety(data: WeatherData): FlightSafety {
+    val windKmH = data.wind_spd * 3.6
+    val gustKmH = data.wind_gust_spd * 3.6
+
+    return when {
+        // RİSKLİ: Rüzgar > 30 km/h VEYA Hamle > 45 km/h VEYA Görünürlük < 2km
+        windKmH > 30 || gustKmH > 45 || data.vis < 2 -> FlightSafety.DANGEROUS
+
+        // KISMEN: Rüzgar 15-30 arası VEYA Bulut çok yoğun VEYA Yağış ihtimali (Nem yüksekse)
+        windKmH > 15 || gustKmH > 25 || data.rh > 85 || data.clouds > 90 -> FlightSafety.CAUTION
+
+        // GÜVENLİ: Her şey yolunda
+        else -> FlightSafety.SAFE
+    }
+}

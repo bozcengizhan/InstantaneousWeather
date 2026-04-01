@@ -10,28 +10,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.instantaneousweather.FlightSafety
 import com.example.instantaneousweather.viewmodels.WeatherViewModel
 import com.example.instantaneousweather.model.WeatherData
 import com.example.instantaneousweather.WeatherUiState
+import com.example.instantaneousweather.model.getFlightSafety
 import com.example.instantaneousweather.ui.theme.InstantaneousWeatherTheme
 
 
 @Composable
 fun WeatherPage(viewModel: WeatherViewModel) {
     val state = viewModel.uiState.value
-    val isSafe = state.weatherData?.let { it.wind_spd * 3.6 < 20 } ?: true
+    val safety = state.weatherData?.let { getFlightSafety(it) } ?: FlightSafety.SAFE
 
-    val backgroundColor = if (state.weatherData == null) {
-        Color(0xFFB7D3C7)
-    } else {
-        if (isSafe) Color(0xFFB7D3C7) else Color(0xFFD3B7B7)
-    }
 
-    Scaffold(containerColor = backgroundColor) { padding ->
+    Scaffold(containerColor = safety.backgroundColor) { padding ->
         when {
             state.isLoading -> {
                 // Yükleniyor ekranı
@@ -57,19 +55,41 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     // UÇUŞ GÜVENLİĞİ (Rüzgar 20 km/h üstündeyse riskli diyelim)
-                    val topCardColor1 = if (isSafe) Color(0xFFA1F193) else Color(0xFFF19393)
 
-                    Card(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp).border(3.dp, Color.Black), colors = CardDefaults.cardColors(containerColor = topCardColor1) ) {
-                        Column(modifier = Modifier.padding(24.dp).align(Alignment.CenterHorizontally)) {
-                            Text(text = "UÇUŞ GÜVENLİĞİ", fontSize = 14.sp)
+                    Spacer(Modifier.weight(0.1f))
+
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                            .border(3.dp, Color.Black, RoundedCornerShape(16.dp)),
+                        colors = CardDefaults.cardColors(containerColor = safety.cardColor),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
+                        shape = RoundedCornerShape(16.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth().padding(24.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
                             Text(
-                                text = if (isSafe) "UÇUŞA UYGUN" else "RİSKLİ HAVA",
-                                color = if (isSafe) Color(0xFF2E7D32) else Color.Red,
+                                text = safety.message,
+                                color = safety.color,
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 24.sp
+                                fontSize = 32.sp // 40.sp biraz büyük kaçabilir, duruma göre ayarlarsın
+                            )
+
+                            // Opsiyonel: Neden riskli olduğunu söyleyen küçük bir alt metin
+                            Text(
+                                text = if(safety == FlightSafety.SAFE) "Şartlar uçuş için ideal."
+                                else "Parametreleri kontrol edin.",
+                                fontSize = 12.sp,
+                                color = Color.DarkGray
                             )
                         }
                     }
+
+                    Spacer(Modifier.weight(0.3f))
+
 
                     Row(modifier = Modifier.fillMaxWidth()) {
                         DroneDataCard("RÜZGAR", "${String.format("%.1f", data.wind_spd * 3.6)} km/h", Modifier.weight(1f))
@@ -96,7 +116,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                         DroneDataCard("UV INDEX", "${data.uv.toInt()}", Modifier.weight(1f))
                     }
 
-                    Spacer(Modifier.weight(0.5f))
+                    Spacer(Modifier.weight(0.6f))
 
                     Text(
                         text = "${data.city_name}",
@@ -104,7 +124,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                         style = MaterialTheme.typography.headlineSmall,
                     )
 
-                    Spacer(Modifier.weight(0.1f))
+                    Spacer(Modifier.weight(0.05f))
                 }
             }
         }
