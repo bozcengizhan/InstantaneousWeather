@@ -12,88 +12,74 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.instantaneousweather.viewmodels.WeatherViewModel
+import com.example.instantaneousweather.model.WeatherData
+import com.example.instantaneousweather.WeatherUiState
+
 
 @Composable
-fun WeatherPage() {
-    // Tek sayfa kuralı: Eğer veriler ekrana sığmazsa aşağı kaydırılabilsin diye scroll ekledik.
-    val scrollState = rememberScrollState()
+fun WeatherPage(viewModel: WeatherViewModel) {
+    val state = viewModel.uiState.value
 
-    Scaffold(
-        containerColor = Color(0xFFE0E0E0) // Biraz daha profesyonel bir gri
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .verticalScroll(scrollState)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // 1. ANA DURUM KARTI (Uçuşa Uygunluk)
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-                    .border(3.dp, Color.Black),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
-            ) {
+    Scaffold(containerColor = Color(0xFFE0E0E0)) { padding ->
+        when {
+            state.isLoading -> {
+                // Yükleniyor ekranı
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = Color.Black)
+                }
+            }
+            state.errorMessage != null -> {
+                // Hata mesajı
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(text = state.errorMessage, color = Color.Red)
+                }
+            }
+            state.weatherData != null -> {
+                // Gerçek Verilerle Panel
+                val data = state.weatherData
+
                 Column(
-                    modifier = Modifier.padding(24.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                        .padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = "UÇUŞ GÜVENLİĞİ", fontSize = 14.sp, color = Color.Gray)
+                    // UÇUŞ GÜVENLİĞİ (Rüzgar 20 km/h üstündeyse riskli diyelim)
+                    val isSafe = data.wind_spd * 3.6 < 20 // m/s'yi km/h'ye çevirdik
+
+                    Card(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp).border(3.dp, Color.Black)) {
+                        Column(modifier = Modifier.padding(24.dp).align(Alignment.CenterHorizontally)) {
+                            Text(text = "UÇUŞ GÜVENLİĞİ", fontSize = 14.sp)
+                            Text(
+                                text = if (isSafe) "UÇUŞA UYGUN" else "RİSKLİ HAVA",
+                                color = if (isSafe) Color(0xFF2E7D32) else Color.Red,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 24.sp
+                            )
+                        }
+                    }
+
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        DroneDataCard("RÜZGAR", "${String.format("%.1f", data.wind_spd * 3.6)} km/h", Modifier.weight(1f))
+                        DroneDataCard("GÖRÜNÜRLÜK", "${data.vis} km", Modifier.weight(1f))
+                    }
+
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        DroneDataCard("SICAKLIK", "${data.temp}°C", Modifier.weight(1f))
+                        DroneDataCard("NEM", "%${data.rh.toInt()}", Modifier.weight(1f))
+                    }
+
+                    DroneDataCard("BULUT ORANI", "%${data.clouds}", Modifier.fillMaxWidth())
+
                     Text(
-                        text = "UÇUŞA UYGUN",
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = Color(0xFF2E7D32) // Yeşil tonu
+                        text = "Konum: ${data.city_name}",
+                        modifier = Modifier.padding(top = 20.dp),
+                        color = Color.DarkGray
                     )
                 }
             }
-
-            // 2. RÜZGAR VE GÖRÜNÜRLÜK (Drone için hayati)
-            Row(modifier = Modifier.fillMaxWidth()) {
-                DroneDataCard("RÜZGAR", "12 km/h", Modifier.weight(1f))
-                DroneDataCard("GÖRÜNÜRLÜK", "10+ km", Modifier.weight(1f))
-            }
-
-            // 3. SICAKLIK VE NEM
-            Row(modifier = Modifier.fillMaxWidth()) {
-                DroneDataCard("SICAKLIK", "24°C", Modifier.weight(1f))
-                DroneDataCard("NEM", "%45", Modifier.weight(1f))
-            }
-
-            // 4. KP INDEX VE BULUT (Manyetik fırtına drone GPS'ini bozar)
-            Row(modifier = Modifier.fillMaxWidth()) {
-                DroneDataCard("KP INDEX", "2 (Düşük)", Modifier.weight(1f))
-                DroneDataCard("BULUT", "%20", Modifier.weight(1f))
-            }
-
-            // 5. RÜZGAR YÖNÜ (Geniş Kart)
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-                    .border(3.dp, Color.Black),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
-            ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(text = "RÜZGAR YÖNÜ", fontWeight = FontWeight.Bold)
-                    Text(text = "Kuzey Batı (NW)", color = Color.DarkGray)
-                }
-            }
-
-            // Alt bilgi (Kullanıcının konumunda olduğunu hatırlatır)
-            Text(
-                text = "Şu anki konumunuzdaki veriler gösteriliyor.",
-                fontSize = 11.sp,
-                color = Color.Gray,
-                modifier = Modifier.padding(top = 16.dp)
-            )
         }
     }
 }
@@ -120,5 +106,7 @@ fun DroneDataCard(label: String, value: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun WeatherPagePreview() {
-    WeatherPage()
+    // Önizleme için sahte bir viewModel
+    val mockViewModel = WeatherViewModel()
+    WeatherPage(viewModel = mockViewModel)
 }
