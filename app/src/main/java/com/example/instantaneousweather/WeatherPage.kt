@@ -141,6 +141,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                     Text(
                         text = "${data.city_name}",
                         color = Color.Gray,
+                        fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.headlineSmall,
                         fontFamily = FontFamily.Serif
                     )
