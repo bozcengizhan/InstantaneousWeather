@@ -71,7 +71,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp)
+                            .padding(vertical = 4.dp)
                             .border(3.dp, Color.Black, RoundedCornerShape(16.dp)),
                         colors = CardDefaults.cardColors(containerColor = safety.cardColor),
                         elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
