@@ -108,32 +108,31 @@ fun WeatherPage(viewModel: WeatherViewModel) {
 
                     Row(modifier = Modifier.fillMaxWidth()) {
                         DroneDataCard("RÜZGAR", "${String.format("%.1f", data.wind_spd * 3.6)} km/h", Modifier.weight(1f))
-                        DroneDataCard("GÖRÜNÜRLÜK", "${data.vis} km", Modifier.weight(1f))
+                        DroneDataCard("BULUT ORANI", "%${data.clouds}", Modifier.weight(1f))
                     }
 
                     Row(modifier = Modifier.fillMaxWidth()) {
                         DroneDataCard("RÜZGAR HAMLESİ", "${String.format("%.1f", data.wind_gust_spd * 3.6)} km/h", Modifier.weight(1f))
-                        DroneDataCard("BASINÇ", "${data.pres.toInt()} hPa", Modifier.weight(1f))
+                        DroneDataCard("GÖRÜNÜRLÜK", "${data.vis} km", Modifier.weight(1f))
                     }
 
                     Row(modifier = Modifier.fillMaxWidth()) {
+                        DroneDataCard("RÜZGAR YÖNÜ", "${data.wind_cdir_full}", Modifier.weight(1f))
                         DroneDataCard("SICAKLIK", "${data.temp}°C", Modifier.weight(1f))
+                    }
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        DroneDataCard("BASINÇ", "${data.pres.toInt()} hPa", Modifier.weight(1f))
+                        DroneDataCard("UV INDEX", "${data.uv.toInt()}", Modifier.weight(1f))
+                    }
+
+                    Row(modifier = Modifier.fillMaxWidth()) {
                         DroneDataCard("NEM", "%${data.rh.toInt()}", Modifier.weight(1f))
+                        DroneDataCard("Hava Kalitesi", "${data.aqs}", Modifier.weight(1f))
                     }
 
                     Row(modifier = Modifier.fillMaxWidth()) {
                         DroneDataCard("GÜN DOĞUMU", data.sunrise, Modifier.weight(1f))
                         DroneDataCard("GÜN BATIMI", data.sunset, Modifier.weight(1f))
-                    }
-
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        DroneDataCard("BULUT ORANI", "%${data.clouds}", Modifier.weight(1f))
-                        DroneDataCard("UV INDEX", "${data.uv.toInt()}", Modifier.weight(1f))
-                    }
-
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        DroneDataCard("RÜZGAR YÖNÜ", "${data.wind_cdir_full}", Modifier.weight(1f))
-                        DroneDataCard("Hava Kalitesi", "${data.aqs}", Modifier.weight(1f))
                     }
 
                     Spacer(Modifier.weight(0.6f))
