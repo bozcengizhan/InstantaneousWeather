@@ -100,7 +100,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                         }
                     }
 
-                    Spacer(Modifier.weight(0.3f))
+                    Spacer(Modifier.weight(0.15f))
 
                     ActiveCompass(azimuth = viewModel.azimuth.value)
 
@@ -182,7 +182,8 @@ fun ActiveCompass(azimuth: Float) {
             .padding(4.dp)
             .border(2.dp, Color.Black, RoundedCornerShape(50.dp)), // Yuvarlak Pusula
         shape = RoundedCornerShape(50.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 12.dp)
     ) {
         Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
             // Kuzey İşareti (K)
