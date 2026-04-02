@@ -163,12 +163,12 @@ fun DroneDataCard(label: String, value: String, modifier: Modifier = Modifier) {
         elevation = CardDefaults.cardElevation(defaultElevation = 12.dp)
     ) {
         Column(
-            modifier = Modifier.padding(12.dp).fillMaxWidth(),
+            modifier = Modifier.padding(8.dp).fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = label, fontSize = 8.sp, color = Color.Gray, fontWeight = FontWeight.Bold, modifier = Modifier.align(Alignment.CenterHorizontally))
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(text = value, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold)
+            Text(text = label, fontSize = 12.sp, color = Color.Gray, fontWeight = FontWeight.Bold, modifier = Modifier.align(Alignment.CenterHorizontally))
+            Spacer(modifier = Modifier.height(1.dp))
+            Text(text = value, fontSize = 16.sp, fontWeight = FontWeight.ExtraBold)
         }
     }
 }
@@ -179,7 +179,7 @@ fun ActiveCompass(azimuth: Float) {
     Card(
         modifier = Modifier
             .size(100.dp)
-            .padding(8.dp)
+            .padding(4.dp)
             .border(2.dp, Color.Black, RoundedCornerShape(50.dp)), // Yuvarlak Pusula
         shape = RoundedCornerShape(50.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
@@ -187,9 +187,10 @@ fun ActiveCompass(azimuth: Float) {
         Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
             // Kuzey İşareti (K)
             Text(
-                text = "K",
-                fontSize = 10.sp,
+                text = "N",
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Serif,
                 modifier = Modifier.align(Alignment.TopCenter).padding(top = 2.dp)
             )
 
@@ -224,7 +225,7 @@ fun WeatherPagePreview() {
             wind_dir = 315,
             vis = 13.0,
             rh = 55.0,
-            clouds = 95,
+            clouds = 15,
             pres = 1013.2,
             uv = 4.0,
             city_name = "Üsküdar / İstanbul",
