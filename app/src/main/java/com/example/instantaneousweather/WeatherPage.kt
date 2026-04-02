@@ -2,6 +2,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -19,14 +20,23 @@ import com.example.instantaneousweather.FlightSafety
 import com.example.instantaneousweather.viewmodels.WeatherViewModel
 import com.example.instantaneousweather.model.WeatherData
 import com.example.instantaneousweather.WeatherUiState
-import com.example.instantaneousweather.model.getFlightSafety
+import com.example.instantaneousweather.model.getFlightSafetyAnalysis
 import com.example.instantaneousweather.ui.theme.InstantaneousWeatherTheme
+import androidx.compose.ui.draw.rotate
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Navigation
+import androidx.compose.material.icons.filled.North
+import androidx.compose.ui.text.font.FontFamily
 
 
 @Composable
 fun WeatherPage(viewModel: WeatherViewModel) {
     val state = viewModel.uiState.value
-    val safety = state.weatherData?.let { getFlightSafety(it) } ?: FlightSafety.SAFE
+
+    // Analizi yapıyoruz
+    val (safety, adviceMessage) = state.weatherData?.let {
+        getFlightSafetyAnalysis(it)
+    } ?: (FlightSafety.SAFE to "Veriler yükleniyor...")
 
 
     Scaffold(containerColor = safety.backgroundColor) { padding ->
@@ -75,21 +85,26 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                                 text = safety.message,
                                 color = safety.color,
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 32.sp // 40.sp biraz büyük kaçabilir, duruma göre ayarlarsın
+                                fontSize = 32.sp
                             )
 
-                            // Opsiyonel: Neden riskli olduğunu söyleyen küçük bir alt metin
+                            Spacer(modifier = Modifier.height(8.dp))
+
                             Text(
-                                text = if(safety == FlightSafety.SAFE) "Şartlar uçuş için ideal."
-                                else "Parametreleri kontrol edin.",
-                                fontSize = 12.sp,
-                                color = Color.DarkGray
+                                text = adviceMessage,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = Color.Black.copy(alpha = 0.7f),
+                                textAlign = TextAlign.Center
                             )
                         }
                     }
 
                     Spacer(Modifier.weight(0.3f))
 
+                    ActiveCompass(azimuth = viewModel.azimuth.value)
+
+                    Spacer(Modifier.weight(0.3f))
 
                     Row(modifier = Modifier.fillMaxWidth()) {
                         DroneDataCard("RÜZGAR", "${String.format("%.1f", data.wind_spd * 3.6)} km/h", Modifier.weight(1f))
@@ -116,12 +131,18 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                         DroneDataCard("UV INDEX", "${data.uv.toInt()}", Modifier.weight(1f))
                     }
 
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        DroneDataCard("RÜZGAR YÖNÜ", "${data.wind_cdir_full}", Modifier.weight(1f))
+                        DroneDataCard("Hava Kalitesi", "${data.aqs}", Modifier.weight(1f))
+                    }
+
                     Spacer(Modifier.weight(0.6f))
 
                     Text(
                         text = "${data.city_name}",
                         color = Color.Gray,
                         style = MaterialTheme.typography.headlineSmall,
+                        fontFamily = FontFamily.Serif
                     )
 
                     Spacer(Modifier.weight(0.05f))
@@ -135,7 +156,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
 fun DroneDataCard(label: String, value: String, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
-            .padding(8.dp)
+            .padding(4.dp)
             .border(3.dp, Color.Black, RoundedCornerShape(16.dp)),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -145,9 +166,42 @@ fun DroneDataCard(label: String, value: String, modifier: Modifier = Modifier) {
             modifier = Modifier.padding(12.dp).fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = label, fontSize = 12.sp, color = Color.Gray, fontWeight = FontWeight.Bold, modifier = Modifier.align(Alignment.CenterHorizontally))
+            Text(text = label, fontSize = 8.sp, color = Color.Gray, fontWeight = FontWeight.Bold, modifier = Modifier.align(Alignment.CenterHorizontally))
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = value, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
+            Text(text = value, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold)
+        }
+    }
+}
+
+
+@Composable
+fun ActiveCompass(azimuth: Float) {
+    Card(
+        modifier = Modifier
+            .size(100.dp)
+            .padding(8.dp)
+            .border(2.dp, Color.Black, RoundedCornerShape(50.dp)), // Yuvarlak Pusula
+        shape = RoundedCornerShape(50.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
+    ) {
+        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+            // Kuzey İşareti (K)
+            Text(
+                text = "K",
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Alignment.TopCenter).padding(top = 2.dp)
+            )
+
+            // Dönen Ok (Gerçek Kuzey'i gösterir)
+            Icon(
+                imageVector = Icons.Default.North,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(40.dp)
+                    .rotate(-azimuth), // Telefon döndükçe ok ters yöne dönerek Kuzey'i sabit tutar
+                tint = Color.Red
+            )
         }
     }
 }
@@ -162,15 +216,15 @@ fun WeatherPagePreview() {
     mockViewModel.uiState.value = WeatherUiState(
         isLoading = false,
         weatherData = WeatherData(
-            temp = 22.4,
+            temp = 32.4,
             app_temp = 21.0,
             wind_spd = 4.5,        // ~16.2 km/h
             wind_gust_spd = 8.2,   // ~29.5 km/h (Kritik veri!)
             wind_cdir_full = "Kuzey Batı",
             wind_dir = 315,
-            vis = 12.0,
+            vis = 13.0,
             rh = 55.0,
-            clouds = 15,
+            clouds = 95,
             pres = 1013.2,
             uv = 4.0,
             city_name = "Üsküdar / İstanbul",

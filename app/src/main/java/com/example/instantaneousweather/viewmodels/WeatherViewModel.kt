@@ -1,6 +1,10 @@
 package com.example.instantaneousweather.viewmodels
 
 import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.location.Geocoder
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -10,7 +14,7 @@ import com.example.instantaneousweather.retrofit.RetrofitClient
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-class WeatherViewModel : ViewModel() {
+class WeatherViewModel : ViewModel(), SensorEventListener {
     var uiState = mutableStateOf(WeatherUiState())
         private set
 
@@ -54,4 +58,44 @@ class WeatherViewModel : ViewModel() {
             }
         }
     }
+
+    var azimuth = mutableStateOf(0f)
+
+    private var sensorManager: SensorManager? = null
+    private var accelerometer: Sensor? = null
+    private var magnetometer: Sensor? = null
+
+    private val gravity = FloatArray(3)
+    private val geomagnetic = FloatArray(3)
+
+    fun startCompass(context: Context) {
+        sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        accelerometer = sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+        magnetometer = sensorManager?.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+
+        sensorManager?.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI)
+        sensorManager?.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI)
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        if (event == null) return
+
+        if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
+            System.arraycopy(event.values, 0, gravity, 0, event.values.size)
+        }
+        if (event.sensor.type == Sensor.TYPE_MAGNETIC_FIELD) {
+            System.arraycopy(event.values, 0, geomagnetic, 0, event.values.size)
+        }
+
+        val R = FloatArray(9)
+        val I = FloatArray(9)
+        if (SensorManager.getRotationMatrix(R, I, gravity, geomagnetic)) {
+            val orientation = FloatArray(3)
+            SensorManager.getOrientation(R, orientation)
+            // Radyanı dereceye çevirip tersini alıyoruz (Kuzey sabit kalsın diye)
+            azimuth.value = Math.toDegrees(orientation[0].toDouble()).toFloat()
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 }
