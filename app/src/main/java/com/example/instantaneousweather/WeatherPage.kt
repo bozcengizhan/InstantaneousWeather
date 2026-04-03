@@ -26,129 +26,150 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Navigation
 import androidx.compose.material.icons.filled.North
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherPage(viewModel: WeatherViewModel) {
     val state = viewModel.uiState.value
+    val context = LocalContext.current
 
     // Analizi yapıyoruz
     val (safety, adviceMessage) = state.weatherData?.let {
         getFlightSafetyAnalysis(it)
     } ?: (FlightSafety.SAFE to "Veriler yükleniyor...")
 
+    val pullToRefreshState = rememberPullToRefreshState()
+
 
     Scaffold(containerColor = safety.backgroundColor) { padding ->
-        when {
-            state.isLoading -> {
-                // Yükleniyor ekranı
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = Color.Black)
-                }
+
+        PullToRefreshBox(
+            modifier = Modifier.fillMaxSize().padding(padding),
+            state = pullToRefreshState,
+            isRefreshing = state.isLoading, // ViewModel'deki isLoading'e bağladık
+            onRefresh = {
+                viewModel.refreshData(context)
             }
-            state.errorMessage != null -> {
-                // Hata mesajı
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = state.errorMessage, color = Color.Red)
+        ) {
+            when {
+                state.isLoading -> {
+                    // Yükleniyor ekranı
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator(color = Color.Black)
+                    }
                 }
-            }
-            state.weatherData != null -> {
-                // Gerçek Verilerle Panel
-                val data = state.weatherData
+                state.errorMessage != null -> {
+                    // Hata mesajı
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(text = state.errorMessage, color = Color.Red)
+                    }
+                }
+                state.weatherData != null -> {
+                    // Gerçek Verilerle Panel
+                    val data = state.weatherData
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    // UÇUŞ GÜVENLİĞİ (Rüzgar 20 km/h üstündeyse riskli diyelim)
-
-                    Spacer(Modifier.weight(0.1f))
-
-                    Card(
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp)
-                            .border(3.dp, Color.Black, RoundedCornerShape(16.dp)),
-                        colors = CardDefaults.cardColors(containerColor = safety.cardColor),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
-                        shape = RoundedCornerShape(16.dp)
+                            .fillMaxSize()
+                            .padding(padding)
+                            .padding(16.dp)
+                            .verticalScroll(rememberScrollState()),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Column(
-                            modifier = Modifier.fillMaxWidth().padding(24.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                        // UÇUŞ GÜVENLİĞİ (Rüzgar 20 km/h üstündeyse riskli diyelim)
+
+                        Spacer(Modifier.weight(0.1f))
+
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                                .border(3.dp, Color.Black, RoundedCornerShape(16.dp)),
+                            colors = CardDefaults.cardColors(containerColor = safety.cardColor),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
+                            shape = RoundedCornerShape(16.dp)
                         ) {
-                            Text(
-                                text = safety.message,
-                                color = safety.color,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 32.sp
-                            )
+                            Column(
+                                modifier = Modifier.fillMaxWidth().padding(24.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = safety.message,
+                                    color = safety.color,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 32.sp
+                                )
 
-                            Spacer(modifier = Modifier.height(8.dp))
+                                Spacer(modifier = Modifier.height(8.dp))
 
-                            Text(
-                                text = adviceMessage,
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = Color.Black.copy(alpha = 0.7f),
-                                textAlign = TextAlign.Center
-                            )
+                                Text(
+                                    text = adviceMessage,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = Color.Black.copy(alpha = 0.7f),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
                         }
+
+                        Spacer(Modifier.weight(0.15f))
+
+                        ActiveCompass(azimuth = viewModel.azimuth.value)
+
+                        Spacer(Modifier.weight(0.3f))
+
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            DroneDataCard("RÜZGAR", "${String.format("%.1f", data.wind_spd * 3.6)} km/h", Modifier.weight(1f))
+                            DroneDataCard("BULUT ORANI", "%${data.clouds}", Modifier.weight(1f))
+                        }
+
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            DroneDataCard("RÜZGAR HAMLESİ", "${String.format("%.1f", data.wind_gust_spd * 3.6)} km/h", Modifier.weight(1f))
+                            DroneDataCard("GÖRÜNÜRLÜK", "${data.vis} km", Modifier.weight(1f))
+                        }
+
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            DroneDataCard("RÜZGAR YÖNÜ", "${data.wind_cdir_full}", Modifier.weight(1f))
+                            DroneDataCard("SICAKLIK", "${data.temp}°C", Modifier.weight(1f))
+                        }
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            DroneDataCard("BASINÇ", "${data.pres.toInt()} hPa", Modifier.weight(1f))
+                            DroneDataCard("UV INDEX", "${data.uv.toInt()}", Modifier.weight(1f))
+                        }
+
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            DroneDataCard("NEM", "%${data.rh.toInt()}", Modifier.weight(1f))
+                            DroneDataCard("Hava Kalitesi", "${data.aqs}", Modifier.weight(1f))
+                        }
+
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            DroneDataCard("GÜN DOĞUMU", data.sunrise, Modifier.weight(1f))
+                            DroneDataCard("GÜN BATIMI", data.sunset, Modifier.weight(1f))
+                        }
+
+                        Spacer(Modifier.weight(0.6f))
+
+                        Text(
+                            text = "${data.city_name}",
+                            color = Color.Gray,
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontFamily = FontFamily.Serif
+                        )
+
+                        Spacer(Modifier.weight(0.05f))
                     }
-
-                    Spacer(Modifier.weight(0.15f))
-
-                    ActiveCompass(azimuth = viewModel.azimuth.value)
-
-                    Spacer(Modifier.weight(0.3f))
-
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        DroneDataCard("RÜZGAR", "${String.format("%.1f", data.wind_spd * 3.6)} km/h", Modifier.weight(1f))
-                        DroneDataCard("BULUT ORANI", "%${data.clouds}", Modifier.weight(1f))
-                    }
-
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        DroneDataCard("RÜZGAR HAMLESİ", "${String.format("%.1f", data.wind_gust_spd * 3.6)} km/h", Modifier.weight(1f))
-                        DroneDataCard("GÖRÜNÜRLÜK", "${data.vis} km", Modifier.weight(1f))
-                    }
-
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        DroneDataCard("RÜZGAR YÖNÜ", "${data.wind_cdir_full}", Modifier.weight(1f))
-                        DroneDataCard("SICAKLIK", "${data.temp}°C", Modifier.weight(1f))
-                    }
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        DroneDataCard("BASINÇ", "${data.pres.toInt()} hPa", Modifier.weight(1f))
-                        DroneDataCard("UV INDEX", "${data.uv.toInt()}", Modifier.weight(1f))
-                    }
-
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        DroneDataCard("NEM", "%${data.rh.toInt()}", Modifier.weight(1f))
-                        DroneDataCard("Hava Kalitesi", "${data.aqs}", Modifier.weight(1f))
-                    }
-
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        DroneDataCard("GÜN DOĞUMU", data.sunrise, Modifier.weight(1f))
-                        DroneDataCard("GÜN BATIMI", data.sunset, Modifier.weight(1f))
-                    }
-
-                    Spacer(Modifier.weight(0.6f))
-
-                    Text(
-                        text = "${data.city_name}",
-                        color = Color.Gray,
-                        fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontFamily = FontFamily.Serif
-                    )
-
-                    Spacer(Modifier.weight(0.05f))
                 }
             }
+
         }
+
+
     }
 }
 

@@ -15,12 +15,18 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 
 class WeatherViewModel : ViewModel(), SensorEventListener {
+
+    private var lastLat: Double? = null
+    private var lastLon: Double? = null
     var uiState = mutableStateOf(WeatherUiState())
         private set
 
     private val API_KEY = "522c88e913f14f1b8fc4c892d9ae24c4"
 
     fun fetchWeatherData(context: Context, lat: Double, lon: Double) {
+        lastLat = lat
+        lastLon = lon
+
         viewModelScope.launch {
             uiState.value = uiState.value.copy(isLoading = true)
 
@@ -56,6 +62,16 @@ class WeatherViewModel : ViewModel(), SensorEventListener {
                     errorMessage = "Veri hatası: ${e.message}"
                 )
             }
+        }
+    }
+
+    fun refreshData(context: Context) {
+        val lat = lastLat
+        val lon = lastLon
+
+        if (lat != null && lon != null) {
+            fetchWeatherData(context, lat, lon)
+        } else {
         }
     }
 
