@@ -30,12 +30,9 @@ class WeatherViewModel : ViewModel(), SensorEventListener {
         viewModelScope.launch {
             uiState.value = uiState.value.copy(isLoading = true)
 
-            // 1. İLÇE İSMİNİ BULMA (Reverse Geocoding)
             val districtName = try {
                 val geocoder = Geocoder(context, Locale("tr"))
-                // Koordinatları adrese çeviriyoruz
                 val addresses = geocoder.getFromLocation(lat, lon, 1)
-                // subAdminArea genelde ilçeyi, adminArea ili verir.
                 addresses?.firstOrNull()?.subAdminArea ?: addresses?.firstOrNull()?.adminArea ?: "Bilinmeyen Konum"
             } catch (e: Exception) {
                 "Konum Alınamadı"
@@ -50,10 +47,9 @@ class WeatherViewModel : ViewModel(), SensorEventListener {
 
                 val result = response.data.firstOrNull()
 
-                // 2. API'den gelen veriyi bizim bulduğumuz ilçe ismiyle güncelliyoruz
                 uiState.value = uiState.value.copy(
                     isLoading = false,
-                    weatherData = result?.copy(city_name = districtName), // İlçe ismini buraya bastık
+                    weatherData = result?.copy(city_name = districtName),
                     errorMessage = null
                 )
             } catch (e: Exception) {
@@ -108,7 +104,6 @@ class WeatherViewModel : ViewModel(), SensorEventListener {
         if (SensorManager.getRotationMatrix(R, I, gravity, geomagnetic)) {
             val orientation = FloatArray(3)
             SensorManager.getOrientation(R, orientation)
-            // Radyanı dereceye çevirip tersini alıyoruz (Kuzey sabit kalsın diye)
             azimuth.value = Math.toDegrees(orientation[0].toDouble()).toFloat()
         }
     }

@@ -15,11 +15,8 @@ import com.google.android.gms.location.Priority
 
 class MainActivity : ComponentActivity() {
 
-    // ViewModel'i burada tanımlıyoruz
     private val viewModel = WeatherViewModel()
 
-    // KRİTİK DÜZELTME: İzin istemciyi onCreate dışına aldık.
-    // Bu sayede uygulama henüz başlamadan kayıt işlemi tamamlanıyor ve çökme engelleniyor.
     private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -27,22 +24,17 @@ class MainActivity : ComponentActivity() {
         val coarseLocationGranted = permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false)
 
         if (fineLocationGranted || coarseLocationGranted) {
-            // Herhangi birine izin verildiyse konumu al
             getUserLocation()
         } else {
-            // İzin verilmediyse kullanıcıya hata mesajı gösterilebilir
-            // viewModel.uiState.value = viewModel.uiState.value.copy(errorMessage = "Konum izni reddedildi.")
+            viewModel.uiState.value = viewModel.uiState.value.copy(errorMessage = "Konum izni reddedildi.")
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.startCompass(this)
-
-        // Tam ekran deneyimi için
         enableEdgeToEdge()
 
-        // Uygulama açıldığı anda izinleri fırlatıyoruz
         locationPermissionRequest.launch(arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
@@ -50,7 +42,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             InstantaneousWeatherTheme {
-                // WeatherPage artık ViewModel'e erişebiliyor
                 WeatherPage(viewModel = viewModel)
             }
         }
@@ -60,16 +51,13 @@ class MainActivity : ComponentActivity() {
     private fun getUserLocation() {
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        // En son bilinen konumu almayı deniyoruz
         fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
             .addOnSuccessListener { location ->
                 if (location != null) {
-                    // 'this' diyerek context'i de gönderiyoruz
                     viewModel.fetchWeatherData(this, location.latitude, location.longitude)
                 }
             }
             .addOnFailureListener {
-                // Konum alma işlemi tamamen başarısız olursa
             }
     }
 }

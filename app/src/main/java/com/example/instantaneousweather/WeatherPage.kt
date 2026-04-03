@@ -38,7 +38,6 @@ fun WeatherPage(viewModel: WeatherViewModel) {
     val state = viewModel.uiState.value
     val context = LocalContext.current
 
-    // Analizi yapıyoruz
     val (safety, adviceMessage) = state.weatherData?.let {
         getFlightSafetyAnalysis(it)
     } ?: (FlightSafety.SAFE to "Veriler yükleniyor...")
@@ -51,26 +50,23 @@ fun WeatherPage(viewModel: WeatherViewModel) {
         PullToRefreshBox(
             modifier = Modifier.fillMaxSize().padding(padding),
             state = pullToRefreshState,
-            isRefreshing = state.isLoading, // ViewModel'deki isLoading'e bağladık
+            isRefreshing = state.isLoading,
             onRefresh = {
                 viewModel.refreshData(context)
             }
         ) {
             when {
                 state.isLoading -> {
-                    // Yükleniyor ekranı
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator(color = Color.Black)
                     }
                 }
                 state.errorMessage != null -> {
-                    // Hata mesajı
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text(text = state.errorMessage, color = Color.Red)
                     }
                 }
                 state.weatherData != null -> {
-                    // Gerçek Verilerle Panel
                     val data = state.weatherData
 
                     Column(
@@ -81,7 +77,6 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                             .verticalScroll(rememberScrollState()),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        // UÇUŞ GÜVENLİĞİ (Rüzgar 20 km/h üstündeyse riskli diyelim)
 
                         Spacer(Modifier.weight(0.1f))
 
@@ -201,13 +196,13 @@ fun ActiveCompass(azimuth: Float) {
         modifier = Modifier
             .size(100.dp)
             .padding(4.dp)
-            .border(2.dp, Color.Black, RoundedCornerShape(50.dp)), // Yuvarlak Pusula
+            .border(2.dp, Color.Black, RoundedCornerShape(50.dp)),
         shape = RoundedCornerShape(50.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 12.dp)
     ) {
         Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-            // Kuzey İşareti (K)
+
             Text(
                 text = "N",
                 fontSize = 14.sp,
@@ -216,13 +211,12 @@ fun ActiveCompass(azimuth: Float) {
                 modifier = Modifier.align(Alignment.TopCenter).padding(top = 2.dp)
             )
 
-            // Dönen Ok (Gerçek Kuzey'i gösterir)
             Icon(
                 imageVector = Icons.Default.North,
                 contentDescription = null,
                 modifier = Modifier
                     .size(40.dp)
-                    .rotate(-azimuth), // Telefon döndükçe ok ters yöne dönerek Kuzey'i sabit tutar
+                    .rotate(-azimuth),
                 tint = Color.Red
             )
         }

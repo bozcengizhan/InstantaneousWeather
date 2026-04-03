@@ -38,7 +38,6 @@ fun getFlightSafetyAnalysis(data: WeatherData): Pair<FlightSafety, String> {
     val pressureDiff = Math.abs(data.pres - 1013.25)
 
     return when {
-        // --- KRİTİK RİSKLER (DANGEROUS) ---
         windKmH > 35 -> FlightSafety.DANGEROUS to "Çok Sert Rüzgar: Pervane ve Motor Hasarı Riski!"
         gustKmH > 45 -> FlightSafety.DANGEROUS to "Şiddetli Rüzgar Hamlesi: Cihaz Savrulabilir!"
         data.vis < 1.0 -> FlightSafety.DANGEROUS to "Görüş Yok: Uçuş Kesinlikle Yasak!"
@@ -46,7 +45,6 @@ fun getFlightSafetyAnalysis(data: WeatherData): Pair<FlightSafety, String> {
         data.temp > 45 -> FlightSafety.DANGEROUS to "Aşırı Sıcak: Motor ve ESC Aşırı Isınabilir!"
         data.rh > 95 -> FlightSafety.DANGEROUS to "Çok Yüksek Nem: Elektronik Arıza veya Yağış Riski!"
 
-        // --- UYARILAR (CAUTION) ---
         windKmH > 20 -> FlightSafety.CAUTION to "Sert Rüzgar: Batarya Tüketimi Artacaktır."
         gustKmH > 30 -> FlightSafety.CAUTION to "Değişken Rüzgar: Gimbal Sarsıntısı Olabilir."
         data.vis < 4.0 -> FlightSafety.CAUTION to "Düşük Görünürlük: Görüş Hattını wKaybetmeyin."
@@ -55,11 +53,9 @@ fun getFlightSafetyAnalysis(data: WeatherData): Pair<FlightSafety, String> {
         pressureDiff > 20 -> FlightSafety.CAUTION to "Basınç Değişimi: Altimetre Hatalı Ölçebilir!"
         data.rh > 80 -> FlightSafety.CAUTION to "Yüksek Nem: Merceklerde Buğulanma Yapabilir."
 
-        // --- ÖZEL DURUMLAR (GÜVENLİ AMA ÖNERİ VAR) ---
         data.temp < 5 -> FlightSafety.SAFE to "Uçuşa Uygun Ancak: Bataryaları Isıtarak Kullanın."
         data.app_temp != data.temp -> FlightSafety.SAFE to "Uygun: Hissedilen Sıcaklık Farklı, Tedbirli Olun."
 
-        // --- İDEAL ---
         else -> FlightSafety.SAFE to "Şartlar İdeal: Sorunsuz Bir Uçuş Dileriz!"
     }
 }
