@@ -1,6 +1,7 @@
 package com.example.instantaneousweather.model
 
 import com.example.instantaneousweather.FlightSafety
+import com.example.instantaneousweather.R
 
 data class WeatherResponse(
     val data: List<WeatherData>
@@ -31,31 +32,33 @@ data class WeatherData(
     val timezone: String        // Bölge zaman dilimi
 )
 
-fun getFlightSafetyAnalysis(data: WeatherData): Pair<FlightSafety, String> {
+fun getFlightSafetyAnalysis(data: WeatherData): Pair<FlightSafety, Int> {
     val windKmH = data.wind_spd * 3.6
     val gustKmH = data.wind_gust_spd * 3.6
-
     val pressureDiff = Math.abs(data.pres - 1013.25)
 
     return when {
-        windKmH > 35 -> FlightSafety.DANGEROUS to "Çok Sert Rüzgar: Pervane ve Motor Hasarı Riski!"
-        gustKmH > 45 -> FlightSafety.DANGEROUS to "Şiddetli Rüzgar Hamlesi: Cihaz Savrulabilir!"
-        data.vis < 1.0 -> FlightSafety.DANGEROUS to "Görüş Yok: Uçuş Kesinlikle Yasak!"
-        data.temp < -10 -> FlightSafety.DANGEROUS to "Aşırı Soğuk: Batarya Hücreleri Donabilir!"
-        data.temp > 45 -> FlightSafety.DANGEROUS to "Aşırı Sıcak: Motor ve ESC Aşırı Isınabilir!"
-        data.rh > 95 -> FlightSafety.DANGEROUS to "Çok Yüksek Nem: Elektronik Arıza veya Yağış Riski!"
+        // --- DANGEROUS ---
+        windKmH > 35 -> FlightSafety.DANGEROUS to R.string.analysis_wind_dangerous
+        gustKmH > 45 -> FlightSafety.DANGEROUS to R.string.analysis_gust_dangerous
+        data.vis < 1.0 -> FlightSafety.DANGEROUS to R.string.analysis_vis_dangerous
+        data.temp < -10 -> FlightSafety.DANGEROUS to R.string.analysis_cold_dangerous
+        data.temp > 45 -> FlightSafety.DANGEROUS to R.string.analysis_hot_dangerous
+        data.rh > 95 -> FlightSafety.DANGEROUS to R.string.analysis_humidity_dangerous
 
-        windKmH > 20 -> FlightSafety.CAUTION to "Sert Rüzgar: Batarya Tüketimi Artacaktır."
-        gustKmH > 30 -> FlightSafety.CAUTION to "Değişken Rüzgar: Gimbal Sarsıntısı Olabilir."
-        data.vis < 4.0 -> FlightSafety.CAUTION to "Düşük Görünürlük: Görüş Hattını wKaybetmeyin."
-        data.clouds > 85 -> FlightSafety.CAUTION to "Yoğun Bulut: Sinyal Kalitesi ve Görüş Etkilenebilir."
-        data.uv > 7 -> FlightSafety.CAUTION to "Yüksek UV: Kontrol Ekranı Isınabilir."
-        pressureDiff > 20 -> FlightSafety.CAUTION to "Basınç Değişimi: Altimetre Hatalı Ölçebilir!"
-        data.rh > 80 -> FlightSafety.CAUTION to "Yüksek Nem: Merceklerde Buğulanma Yapabilir."
+        // --- CAUTION ---
+        windKmH > 20 -> FlightSafety.CAUTION to R.string.analysis_wind_caution
+        gustKmH > 30 -> FlightSafety.CAUTION to R.string.analysis_gust_caution
+        data.vis < 4.0 -> FlightSafety.CAUTION to R.string.analysis_vis_caution
+        data.clouds > 85 -> FlightSafety.CAUTION to R.string.analysis_clouds_caution
+        data.uv > 7 -> FlightSafety.CAUTION to R.string.analysis_uv_caution
+        pressureDiff > 20 -> FlightSafety.CAUTION to R.string.analysis_pressure_caution
+        data.rh > 80 -> FlightSafety.CAUTION to R.string.analysis_humidity_caution
 
-        data.temp < 5 -> FlightSafety.SAFE to "Uçuşa Uygun Ancak: Bataryaları Isıtarak Kullanın."
-        data.app_temp != data.temp -> FlightSafety.SAFE to "Uygun: Hissedilen Sıcaklık Farklı, Tedbirli Olun."
+        // --- SAFE ---
+        data.temp < 5 -> FlightSafety.SAFE to R.string.analysis_cold_safe
+        data.app_temp != data.temp -> FlightSafety.SAFE to R.string.analysis_temp_diff_safe
 
-        else -> FlightSafety.SAFE to "Şartlar İdeal: Sorunsuz Bir Uçuş Dileriz!"
+        else -> FlightSafety.SAFE to R.string.analysis_ideal
     }
 }

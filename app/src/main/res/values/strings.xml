@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">Instantaneous Weather</string>
+    <string name="safety_safe">UÇUŞA UYGUN</string>
+    <string name="safety_caution">KISMEN GÜVENLİ</string>
+    <string name="safety_dangerous">RİSKLİ HAVA</string>
+    <string name="analysis_wind_dangerous">Çok Sert Rüzgar: Pervane ve Motor Hasarı Riski!</string>
+    <string name="analysis_gust_dangerous">Şiddetli Rüzgar Hamlesi: Cihaz Savrulabilir!</string>
+    <string name="analysis_vis_dangerous">Görüş Yok: Uçuş Kesinlikle Yasak!</string>
+    <string name="analysis_cold_dangerous">Aşırı Soğuk: Batarya Hücreleri Donabilir!</string>
+    <string name="analysis_hot_dangerous">Aşırı Sıcak: Motor ve ESC Aşırı Isınabilir!</string>
+    <string name="analysis_humidity_dangerous">Çok Yüksek Nem: Elektronik Arıza veya Yağış Riski!</string>
+
+    <string name="analysis_wind_caution">Sert Rüzgar: Batarya Tüketimi Artacaktır.</string>
+    <string name="analysis_gust_caution">Değişken Rüzgar: Gimbal Sarsıntısı Olabilir.</string>
+    <string name="analysis_vis_caution">Düşük Görünürlük: Görüş Hattını Kaybetmeyin.</string>
+    <string name="analysis_clouds_caution">Yoğun Bulut: Sinyal Kalitesi ve Görüş Etkilenebilir.</string>
+    <string name="analysis_uv_caution">Yüksek UV: Kontrol Ekranı Isınabilir.</string>
+    <string name="analysis_pressure_caution">Basınç Değişimi: Altimetre Hatalı Ölçebilir!</string>
+    <string name="analysis_humidity_caution">Yüksek Nem: Merceklerde Buğulanma Yapabilir.</string>
+
+    <string name="analysis_cold_safe">Uçuşa Uygun Ancak: Bataryaları Isıtarak Kullanın.</string>
+    <string name="analysis_temp_diff_safe">Uygun: Hissedilen Sıcaklık Farklı, Tedbirli Olun.</string>
+    <string name="analysis_ideal">Şartlar İdeal: Sorunsuz Bir Uçuş Dileriz!</string>
+
+    <string name="loading_data">Veriler yükleniyor…</string>
 </resources>

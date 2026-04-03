@@ -29,7 +29,10 @@ import androidx.compose.material.icons.filled.North
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.res.stringResource
+import com.example.instantaneousweather.R
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,7 +43,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
 
     val (safety, adviceMessage) = state.weatherData?.let {
         getFlightSafetyAnalysis(it)
-    } ?: (FlightSafety.SAFE to "Veriler yükleniyor...")
+    } ?: (FlightSafety.SAFE to R.string.loading_data)
 
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -94,7 +97,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
-                                    text = safety.message,
+                                    text = stringResource(id = safety.messageRes), // ID'yi dile göre metne çevirir
                                     color = safety.color,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 32.sp
@@ -103,7 +106,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                                 Spacer(modifier = Modifier.height(8.dp))
 
                                 Text(
-                                    text = adviceMessage,
+                                    text = stringResource(id = adviceMessage),
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Medium,
                                     color = Color.Black.copy(alpha = 0.7f),

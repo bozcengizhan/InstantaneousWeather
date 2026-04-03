@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="safety_safe">FLIGHT SAFE</string>
+    <string name="safety_caution">PARTIAL CAUTION</string>
+    <string name="safety_dangerous">DANGEROUS WEATHER</string>
+    <string name="analysis_wind_dangerous">Strong Wind: Propeller and Motor Damage Risk!</string>
+    <string name="analysis_gust_dangerous">Severe Wind Gust: Device May Drift!</string>
+    <string name="analysis_vis_dangerous">No Visibility: Flight Strictly Prohibited!</string>
+    <string name="analysis_cold_dangerous">Extreme Cold: Battery Cells May Freeze!</string>
+    <string name="analysis_hot_dangerous">Extreme Heat: Motor and ESC May Overheat!</string>
+    <string name="analysis_humidity_dangerous">High Humidity: Risk of Electronic Failure or Rain!</string>
+
+    <string name="analysis_wind_caution">Breezy: Battery Consumption Will Increase.</string>
+    <string name="analysis_gust_caution">Variable Wind: Gimbal Shaking Possible.</string>
+    <string name="analysis_vis_caution">Low Visibility: Keep Visual Line of Sight.</string>
+    <string name="analysis_clouds_caution">Heavy Clouds: Signal Quality and Visibility May Be Affected.</string>
+    <string name="analysis_uv_caution">High UV: Controller Screen May Overheat.</string>
+    <string name="analysis_pressure_caution">Pressure Change: Altimeter May Be Inaccurate!</string>
+    <string name="analysis_humidity_caution">High Humidity: May Cause Lens Fogging.</string>
+
+    <string name="analysis_cold_safe">Suitable for Flight: Warm Up Batteries Before Use.</string>
+    <string name="analysis_temp_diff_safe">Suitable: Apparent Temperature Differs, Be Cautious.</string>
+    <string name="analysis_ideal">Ideal Conditions: Have a Safe Flight!</string>
+
+    <string name="loading_data">Loading data…</string>
+</resources>
