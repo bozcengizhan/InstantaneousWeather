@@ -208,7 +208,7 @@ fun ActiveCompass(azimuth: Float) {
     }
 }
 
-
+/*
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun WeatherPagePreview() {
@@ -244,3 +244,5 @@ fun WeatherPagePreview() {
         WeatherPage(viewModel = mockViewModel)
     }
 }
+
+ */
