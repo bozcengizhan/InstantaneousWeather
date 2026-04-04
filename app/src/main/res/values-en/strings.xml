@@ -23,4 +23,17 @@
     <string name="analysis_ideal">Ideal Conditions: Have a Safe Flight!</string>
 
     <string name="loading_data">Loading data…</string>
+
+    <string name="label_wind">WIND</string>
+    <string name="label_clouds">CLOUD RATIO</string>
+    <string name="label_gust">WIND GUST</string>
+    <string name="label_vis">VISIBILITY</string>
+    <string name="label_direction">WIND DIRECTION</string>
+    <string name="label_temp">TEMPERATURE</string>
+    <string name="label_pressure">PRESSURE</string>
+    <string name="label_uv">UV INDEX</string>
+    <string name="label_humidity">HUMIDITY</string>
+    <string name="label_aqi">AIR QUALITY</string>
+    <string name="label_sunrise">SUNRISE</string>
+    <string name="label_sunset">SUNSET</string>
 </resources>

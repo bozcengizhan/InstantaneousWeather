@@ -122,32 +122,33 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                         Spacer(Modifier.weight(0.3f))
 
                         Row(modifier = Modifier.fillMaxWidth()) {
-                            DroneDataCard("RÜZGAR", "${String.format("%.1f", data.wind_spd * 3.6)} km/h", Modifier.weight(1f))
-                            DroneDataCard("BULUT ORANI", "%${data.clouds}", Modifier.weight(1f))
+                            DroneDataCard(R.string.label_wind, "${String.format("%.1f", data.wind_spd * 3.6)} km/h", Modifier.weight(1f))
+                            DroneDataCard(R.string.label_clouds, "%${data.clouds}", Modifier.weight(1f))
                         }
 
                         Row(modifier = Modifier.fillMaxWidth()) {
-                            DroneDataCard("RÜZGAR HAMLESİ", "${String.format("%.1f", data.wind_gust_spd * 3.6)} km/h", Modifier.weight(1f))
-                            DroneDataCard("GÖRÜNÜRLÜK", "${data.vis} km", Modifier.weight(1f))
+                            DroneDataCard(R.string.label_gust, "${String.format("%.1f", data.wind_gust_spd * 3.6)} km/h", Modifier.weight(1f))
+                            DroneDataCard(R.string.label_vis, "${data.vis} km", Modifier.weight(1f))
                         }
 
                         Row(modifier = Modifier.fillMaxWidth()) {
-                            DroneDataCard("RÜZGAR YÖNÜ", "${data.wind_cdir_full}", Modifier.weight(1f))
-                            DroneDataCard("SICAKLIK", "${data.temp}°C", Modifier.weight(1f))
-                        }
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            DroneDataCard("BASINÇ", "${data.pres.toInt()} hPa", Modifier.weight(1f))
-                            DroneDataCard("UV INDEX", "${data.uv.toInt()}", Modifier.weight(1f))
+                            DroneDataCard(R.string.label_direction, data.wind_cdir_full, Modifier.weight(1f))
+                            DroneDataCard(R.string.label_temp, "${data.temp}°C", Modifier.weight(1f))
                         }
 
                         Row(modifier = Modifier.fillMaxWidth()) {
-                            DroneDataCard("NEM", "%${data.rh.toInt()}", Modifier.weight(1f))
-                            DroneDataCard("Hava Kalitesi", "${data.aqs}", Modifier.weight(1f))
+                            DroneDataCard(R.string.label_pressure, "${data.pres.toInt()} hPa", Modifier.weight(1f))
+                            DroneDataCard(R.string.label_uv, "${data.uv.toInt()}", Modifier.weight(1f))
                         }
 
                         Row(modifier = Modifier.fillMaxWidth()) {
-                            DroneDataCard("GÜN DOĞUMU", data.sunrise, Modifier.weight(1f))
-                            DroneDataCard("GÜN BATIMI", data.sunset, Modifier.weight(1f))
+                            DroneDataCard(R.string.label_humidity, "%${data.rh.toInt()}", Modifier.weight(1f))
+                            DroneDataCard(R.string.label_aqi, "${data.aqs ?: "-"}", Modifier.weight(1f))
+                        }
+
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            DroneDataCard(R.string.label_sunrise, data.sunrise, Modifier.weight(1f))
+                            DroneDataCard(R.string.label_sunset, data.sunset, Modifier.weight(1f))
                         }
 
                         Spacer(Modifier.weight(0.6f))
@@ -172,7 +173,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
 }
 
 @Composable
-fun DroneDataCard(label: String, value: String, modifier: Modifier = Modifier) {
+fun DroneDataCard(labelRes: Int, value: String, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .padding(4.dp)
@@ -185,7 +186,13 @@ fun DroneDataCard(label: String, value: String, modifier: Modifier = Modifier) {
             modifier = Modifier.padding(8.dp).fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = label, fontSize = 12.sp, color = Color.Gray, fontWeight = FontWeight.Bold, modifier = Modifier.align(Alignment.CenterHorizontally))
+            Text(
+                text = stringResource(id = labelRes), // Yazı yerine ID'den çekiyoruz
+                fontSize = 12.sp,
+                color = Color.Gray,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
             Spacer(modifier = Modifier.height(1.dp))
             Text(text = value, fontSize = 16.sp, fontWeight = FontWeight.ExtraBold)
         }
@@ -226,41 +233,3 @@ fun ActiveCompass(azimuth: Float) {
     }
 }
 
-/*
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun WeatherPagePreview() {
-    // 1. Sahte bir ViewModel oluşturuyoruz
-    val mockViewModel = WeatherViewModel()
-
-    // 2. ViewModel'in içindeki state'i manuel olarak zengin verilerle dolduruyoruz
-    mockViewModel.uiState.value = WeatherUiState(
-        isLoading = false,
-        weatherData = WeatherData(
-            temp = 32.4,
-            app_temp = 21.0,
-            wind_spd = 4.5,        // ~16.2 km/h
-            wind_gust_spd = 8.2,   // ~29.5 km/h (Kritik veri!)
-            wind_cdir_full = "Kuzey Batı",
-            wind_dir = 315,
-            vis = 13.0,
-            rh = 55.0,
-            clouds = 15,
-            pres = 1013.2,
-            uv = 4.0,
-            city_name = "Üsküdar / İstanbul",
-            sunrise = "06:45",
-            sunset = "19:32",
-            timezone = "Europe/Istanbul",
-            aqs = 42
-        ),
-        errorMessage = null
-    )
-
-    // 3. Kendi temanla sarmalayarak gösteriyoruz
-    InstantaneousWeatherTheme {
-        WeatherPage(viewModel = mockViewModel)
-    }
-}
-
- */

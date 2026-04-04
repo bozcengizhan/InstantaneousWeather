@@ -23,4 +23,17 @@
     <string name="analysis_ideal">Şartlar İdeal: Sorunsuz Bir Uçuş Dileriz!</string>
 
     <string name="loading_data">Veriler yükleniyor…</string>
+
+    <string name="label_wind">RÜZGAR</string>
+    <string name="label_clouds">BULUT ORANI</string>
+    <string name="label_gust">RÜZGAR HAMLESİ</string>
+    <string name="label_vis">GÖRÜNÜRLÜK</string>
+    <string name="label_direction">RÜZGAR YÖNÜ</string>
+    <string name="label_temp">SICAKLIK</string>
+    <string name="label_pressure">BASINÇ</string>
+    <string name="label_uv">UV INDEX</string>
+    <string name="label_humidity">NEM</string>
+    <string name="label_aqi">HAVA KALİTESİ</string>
+    <string name="label_sunrise">GÜN DOĞUMU</string>
+    <string name="label_sunset">GÜN BATIMI</string>
 </resources>
