@@ -3,7 +3,7 @@ package com.example.instantaneousweather
 import androidx.compose.ui.graphics.Color
 
 enum class FlightSafety(
-    val messageRes: Int,     // String'in kendisi yerine ID'sini tutuyoruz
+    val messageRes: Int,
     val color: Color,
     val cardColor: Color,
     val backgroundColor: Color
