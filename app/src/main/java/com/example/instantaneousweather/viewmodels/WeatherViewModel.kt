@@ -29,6 +29,7 @@ class WeatherViewModel : ViewModel(), SensorEventListener {
 
         viewModelScope.launch {
             uiState.value = uiState.value.copy(isLoading = true)
+            val deviceLang = Locale.getDefault().language
 
             val districtName = try {
                 val geocoder = Geocoder(context, Locale("tr"))
@@ -42,7 +43,8 @@ class WeatherViewModel : ViewModel(), SensorEventListener {
                 val response = RetrofitClient.service.getCurrentWeather(
                     lat = lat,
                     lon = lon,
-                    apiKey = API_KEY
+                    apiKey = API_KEY,
+                    lang = deviceLang
                 )
 
                 val result = response.data.firstOrNull()

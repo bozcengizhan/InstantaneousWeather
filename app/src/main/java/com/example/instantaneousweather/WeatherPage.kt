@@ -132,7 +132,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                         }
 
                         Row(modifier = Modifier.fillMaxWidth()) {
-                            DroneDataCard(R.string.label_direction, data.wind_cdir_full, Modifier.weight(1f))
+                            DroneDataCard(R.string.label_direction, data.wind_cdir_full.capitalizeWords(), Modifier.weight(1f))
                             DroneDataCard(R.string.label_temp, "${data.temp}°C", Modifier.weight(1f))
                         }
 
@@ -171,6 +171,9 @@ fun WeatherPage(viewModel: WeatherViewModel) {
 
     }
 }
+
+fun String.capitalizeWords(): String =
+    split(" ").joinToString(" ") { it.lowercase().replaceFirstChar { char -> char.uppercase() } }
 
 @Composable
 fun DroneDataCard(labelRes: Int, value: String, modifier: Modifier = Modifier) {
