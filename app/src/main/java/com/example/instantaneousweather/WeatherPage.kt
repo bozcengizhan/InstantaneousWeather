@@ -97,7 +97,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
-                                    text = stringResource(id = safety.messageRes), // ID'yi dile göre metne çevirir
+                                    text = stringResource(id = safety.messageRes),
                                     color = safety.color,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 32.sp
