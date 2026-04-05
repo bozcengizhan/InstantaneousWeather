@@ -161,7 +161,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                             fontFamily = FontFamily.Serif
                         )
 
-                        Spacer(Modifier.weight(0.04f))
+                        Spacer(Modifier.weight(0.05f))
                     }
                 }
             }
