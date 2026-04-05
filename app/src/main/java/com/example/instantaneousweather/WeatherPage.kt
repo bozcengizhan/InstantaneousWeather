@@ -81,7 +81,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
 
-                        Spacer(Modifier.weight(0.1f))
+                        Spacer(Modifier.weight(0.15f))
 
                         Card(
                             modifier = Modifier
