@@ -100,7 +100,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                                     text = stringResource(id = safety.messageRes),
                                     color = safety.color,
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 31.sp
+                                    fontSize = 32.sp
                                 )
 
                                 Spacer(modifier = Modifier.height(8.dp))
