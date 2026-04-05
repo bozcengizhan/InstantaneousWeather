@@ -81,7 +81,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
 
-                        Spacer(Modifier.weight(0.15f))
+                        Spacer(Modifier.weight(0.1f))
 
                         Card(
                             modifier = Modifier
@@ -100,7 +100,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                                     text = stringResource(id = safety.messageRes),
                                     color = safety.color,
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 32.sp
+                                    fontSize = 31.sp
                                 )
 
                                 Spacer(modifier = Modifier.height(8.dp))
