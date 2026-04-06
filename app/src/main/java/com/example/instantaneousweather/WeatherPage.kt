@@ -228,7 +228,7 @@ fun ActiveCompass(azimuth: Float) {
                 imageVector = Icons.Default.North,
                 contentDescription = null,
                 modifier = Modifier
-                    .size(42.dp)
+                    .size(40.dp)
                     .rotate(-azimuth),
                 tint = Color.Red
             )
