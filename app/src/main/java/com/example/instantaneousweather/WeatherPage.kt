@@ -191,7 +191,7 @@ fun DroneDataCard(labelRes: Int, value: String, modifier: Modifier = Modifier) {
         ) {
             Text(
                 text = stringResource(id = labelRes), // Yazı yerine ID'den çekiyoruz
-                fontSize = 12.sp,
+                fontSize = 13.sp,
                 color = Color.Gray,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
