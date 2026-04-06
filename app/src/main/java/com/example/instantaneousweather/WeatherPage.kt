@@ -218,7 +218,7 @@ fun ActiveCompass(azimuth: Float) {
 
             Text(
                 text = "N",
-                fontSize = 14.sp,
+                fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.Serif,
                 modifier = Modifier.align(Alignment.TopCenter).padding(top = 2.dp)
