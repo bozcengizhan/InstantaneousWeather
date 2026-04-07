@@ -115,11 +115,11 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                             }
                         }
 
-                        Spacer(Modifier.weight(0.15f))
+                        Spacer(Modifier.weight(0.3f))
 
                         ActiveCompass(azimuth = viewModel.azimuth.value)
 
-                        Spacer(Modifier.weight(0.3f))
+                        Spacer(Modifier.weight(0.5f))
 
                         Row(modifier = Modifier.fillMaxWidth()) {
                             DroneDataCard(R.string.label_wind, "${String.format("%.1f", data.wind_spd * 3.6)} km/h", Modifier.weight(1f))
@@ -179,7 +179,7 @@ fun String.capitalizeWords(): String =
 fun DroneDataCard(labelRes: Int, value: String, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
-            .padding(4.dp)
+            .padding(5.dp)
             .border(3.dp, Color.Black, RoundedCornerShape(16.dp)),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
