@@ -1,7 +1,7 @@
-package com.example.instantaneousweather.model
+package com.bozcengizhan.instantaneousweather.model
 
-import com.example.instantaneousweather.FlightSafety
-import com.example.instantaneousweather.R
+import com.bozcengizhan.instantaneousweather.FlightSafety
+import com.bozcengizhan.instantaneousweather.R
 
 data class WeatherResponse(
     val data: List<WeatherData>

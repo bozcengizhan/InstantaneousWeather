@@ -1,6 +1,6 @@
-package com.example.instantaneousweather
+package com.bozcengizhan.instantaneousweather
 
-import com.example.instantaneousweather.model.WeatherData
+import com.bozcengizhan.instantaneousweather.model.WeatherData
 
 data class WeatherUiState(
     val isLoading: Boolean = false,

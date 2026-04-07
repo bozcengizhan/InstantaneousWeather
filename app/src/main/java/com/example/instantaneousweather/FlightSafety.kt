@@ -1,4 +1,4 @@
-package com.example.instantaneousweather
+package com.bozcengizhan.instantaneousweather
 
 import androidx.compose.ui.graphics.Color
 

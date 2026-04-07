@@ -1,4 +1,4 @@
-package com.example.instantaneousweather
+package com.bozcengizhan.instantaneousweather
 
 import WeatherPage
 import android.Manifest
@@ -9,7 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.instantaneousweather.ui.theme.InstantaneousWeatherTheme
-import com.example.instantaneousweather.viewmodels.WeatherViewModel
+import com.bozcengizhan.instantaneousweather.viewmodels.WeatherViewModel
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 

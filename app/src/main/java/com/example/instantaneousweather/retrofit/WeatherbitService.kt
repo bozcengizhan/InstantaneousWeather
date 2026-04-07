@@ -1,6 +1,6 @@
-package com.example.instantaneousweather.retrofit
+package com.bozcengizhan.instantaneousweather.retrofit
 
-import com.example.instantaneousweather.model.WeatherResponse
+import com.bozcengizhan.instantaneousweather.model.WeatherResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

@@ -1,4 +1,4 @@
-package com.example.instantaneousweather.viewmodels
+package com.bozcengizhan.instantaneousweather.viewmodels
 
 import android.content.Context
 import android.hardware.Sensor
@@ -9,8 +9,8 @@ import android.location.Geocoder
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.instantaneousweather.WeatherUiState
-import com.example.instantaneousweather.retrofit.RetrofitClient
+import com.bozcengizhan.instantaneousweather.WeatherUiState
+import com.bozcengizhan.instantaneousweather.retrofit.RetrofitClient
 import kotlinx.coroutines.launch
 import java.util.Locale
 

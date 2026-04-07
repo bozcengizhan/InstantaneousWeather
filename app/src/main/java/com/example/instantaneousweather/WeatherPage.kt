@@ -16,11 +16,11 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.instantaneousweather.FlightSafety
-import com.example.instantaneousweather.viewmodels.WeatherViewModel
-import com.example.instantaneousweather.model.WeatherData
-import com.example.instantaneousweather.WeatherUiState
-import com.example.instantaneousweather.model.getFlightSafetyAnalysis
+import com.bozcengizhan.instantaneousweather.FlightSafety
+import com.bozcengizhan.instantaneousweather.viewmodels.WeatherViewModel
+import com.bozcengizhan.instantaneousweather.model.WeatherData
+import com.bozcengizhan.instantaneousweather.WeatherUiState
+import com.bozcengizhan.instantaneousweather.model.getFlightSafetyAnalysis
 import com.example.instantaneousweather.ui.theme.InstantaneousWeatherTheme
 import androidx.compose.ui.draw.rotate
 import androidx.compose.material.icons.Icons
@@ -32,7 +32,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.res.stringResource
-import com.example.instantaneousweather.R
+import com.bozcengizhan.instantaneousweather.R
 
 
 @OptIn(ExperimentalMaterial3Api::class)

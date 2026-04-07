@@ -5,13 +5,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.instantaneousweather"
+    namespace = "com.bozcengizhan.instantaneousweather"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.example.instantaneousweather"
+        applicationId = "com.bozcengizhan.instantaneousweather"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -69,4 +69,7 @@ dependencies {
 
 // Lifecycle (ViewModel için)
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+
+    implementation("androidx.fragment:fragment-ktx:1.5.0")
+    implementation("androidx.activity:activity-compose:1.7.0")
 }
