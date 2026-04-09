@@ -10,6 +10,7 @@ interface WeatherbitService {
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
         @Query("key") apiKey: String,
-        @Query("lang") lang: String
+        @Query("lang") lang: String,
+        @Query("include") include: String = "aqi"
     ): WeatherResponse
 }
