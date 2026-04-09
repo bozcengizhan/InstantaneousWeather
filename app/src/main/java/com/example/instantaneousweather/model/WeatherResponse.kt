@@ -2,6 +2,7 @@ package com.bozcengizhan.instantaneousweather.model
 
 import com.bozcengizhan.instantaneousweather.FlightSafety
 import com.bozcengizhan.instantaneousweather.R
+import com.google.gson.annotations.SerializedName
 
 data class WeatherResponse(
     val data: List<WeatherData>
@@ -24,7 +25,9 @@ data class WeatherData(
     val clouds: Int,            // Bulut oranı (%)
     val pres: Double,           // Basınç (mb - Altimetre kalibrasyonu için)
     val uv: Double,             // UV İndeksi (Güneş radyasyonu)
-    val aqs: Int?,              // Hava Kalitesi (Bazı paketlerde gelir)
+
+    @SerializedName("aqi") // JSON'dan 'aqi' olarak gelen veriyi 'aqs' değişkenine aktarır
+    val aqs: Int?,
 
     // ZAMANLAMA (Uçuş süresi planlama için)
     val sunrise: String,        // Gün doğumu (HH:mm formatında)
