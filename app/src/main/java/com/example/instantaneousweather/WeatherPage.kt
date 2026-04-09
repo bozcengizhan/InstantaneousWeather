@@ -100,14 +100,14 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                                     text = stringResource(id = safety.messageRes),
                                     color = safety.color,
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 32.sp
+                                    fontSize = 24.sp
                                 )
 
                                 Spacer(modifier = Modifier.height(8.dp))
 
                                 Text(
                                     text = stringResource(id = adviceMessage),
-                                    fontSize = 14.sp,
+                                    fontSize = 12.sp,
                                     fontWeight = FontWeight.Medium,
                                     color = Color.Black.copy(alpha = 0.7f),
                                     textAlign = TextAlign.Center
@@ -158,7 +158,8 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                             color = Color.Gray,
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.headlineSmall,
-                            fontFamily = FontFamily.Serif
+                            fontFamily = FontFamily.Serif,
+                            textAlign = TextAlign.Center
                         )
 
                         Spacer(Modifier.weight(0.03f))

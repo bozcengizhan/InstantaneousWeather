@@ -46,7 +46,7 @@ fun getFlightSafetyAnalysis(data: WeatherData): Pair<FlightSafety, Int> {
         gustKmH > 45 -> FlightSafety.DANGEROUS to R.string.analysis_gust_dangerous
         data.vis < 1.0 -> FlightSafety.DANGEROUS to R.string.analysis_vis_dangerous
         data.temp < -10 -> FlightSafety.DANGEROUS to R.string.analysis_cold_dangerous
-        data.temp > 45 -> FlightSafety.DANGEROUS to R.string.analysis_hot_dangerous
+        data.temp > 25 -> FlightSafety.DANGEROUS to R.string.analysis_hot_dangerous
         data.rh > 95 -> FlightSafety.DANGEROUS to R.string.analysis_humidity_dangerous
 
         // --- CAUTION ---
