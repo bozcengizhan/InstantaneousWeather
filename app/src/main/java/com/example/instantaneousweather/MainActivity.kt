@@ -26,7 +26,11 @@ class MainActivity : ComponentActivity() {
         if (fineLocationGranted || coarseLocationGranted) {
             getUserLocation()
         } else {
-            viewModel.uiState.value = viewModel.uiState.value.copy(errorMessage = "Konum izni reddedildi.")
+            // Sadece "Konum izni reddedildi" yerine daha açıklayıcı ve Google'ı ikna edici bir metin:
+            viewModel.uiState.value = viewModel.uiState.value.copy(
+                isLoading = false,
+                errorMessage = "AirMate requires location permission to show weather data and flight safety analysis. Please enable location in settings."
+            )
         }
     }
 
@@ -58,6 +62,10 @@ class MainActivity : ComponentActivity() {
                 }
             }
             .addOnFailureListener {
+                viewModel.uiState.value = viewModel.uiState.value.copy(
+                    isLoading = false,
+                    errorMessage = "Failed to get your location. Please check your GPS settings and try again."
+                )
             }
     }
 }
