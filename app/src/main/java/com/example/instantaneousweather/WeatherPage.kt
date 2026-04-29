@@ -65,8 +65,33 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                     }
                 }
                 state.errorMessage != null -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(text = state.errorMessage, color = Color.Red)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Navigation, // Veya başka bir uyarı ikonu
+                            contentDescription = null,
+                            modifier = Modifier.size(64.dp),
+                            tint = Color.Gray
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = state.errorMessage!!,
+                            color = Color.Black,
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                        Spacer(modifier = Modifier.height(24.dp))
+                        Button(
+                            onClick = { /* Burada tekrar izin isteme veya yenileme tetiklenebilir */ },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
+                        ) {
+                            Text("Try Again")
+                        }
                     }
                 }
                 state.weatherData != null -> {
@@ -164,6 +189,12 @@ fun WeatherPage(viewModel: WeatherViewModel) {
 
                         Spacer(Modifier.weight(0.03f))
                     }
+                }else -> {
+                // Uygulama ilk açıldığında izin beklerken veya veri yokken boş görünmesin
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text("Waiting for location and weather data...")
+                }
+
                 }
             }
 
